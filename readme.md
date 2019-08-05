@@ -15,7 +15,7 @@ In order to follow this tutorial, you will need:
 
 ## Getting started
 
-In this tutorial, we will look at how to take advantage of Twilio Sync to manage our application data by building a Todo application using [Angular](https://angular.io/) and [Laravel](https://laravel.com/) for our Frontend and API respectively. We start by building our RESTful API which will be the backbone for our To-do application.
+In this tutorial, we will look at how to take advantage of Twilio Sync to manage our application data by building a To-do application using [Angular](https://angular.io/) and [Laravel](https://laravel.com/) for our Frontend and API respectively. We start by building our RESTful API which will be the backbone for our To-do application.
 
 ### Setting up Laravel Project
 
