@@ -219,8 +219,9 @@ After which we return a `JSON` response with a `message`.
 
 ### Creating Routes
 
-At this point, we have successfully built a basic CRUD API for our todo application. Now let’s create the routes for our API. 
-Usually, when building a Laravel application we would place our application routes in the `routes/web.php`  file which will allow us access our application by `http://todo-app.test/todo` and also routes in this file are assigned the `web` middleware group, which provides features like session state and CSRF protection. But since we are building an API, we would have to place our routes in the `routes/api.php`  file which will prefix all our routes with `/api`  and also assigns  the `api` middleware group, which provides features like throttling and bindings and also allows our routes to be stateless.  Open up `routes/api.php`  and make the following changes:
+At this point, we have successfully built a basic CRUD API for our to-do application. Now let’s create the routes for our API.
+
+Usually, when building a Laravel application, we would place our application routes in the `routes/web.php`  file. This would allow us to access our application at `http://todo-app.test/todo` and provide features like session state and CSRF protection through the `web` [middleware group](https://laravel.com/docs/5.8/middleware). However, since we are building an API, Laravel has a more well suited locattion for these routes, `routes/api.php`. Placing our routes here will prefix them with `/api` and assign the `api` middleware group. The api  middleware provides features like throttling and bindings, and also allows our routes to be stateless. Open up `routes/api.php` and make the following changes:
 
     <?php
     use Illuminate\Http\Request;
@@ -239,7 +240,6 @@ Usually, when building a Laravel application we would place our application rout
     Route::put('/todo/{sid}', "TodoController@updateTodo");
     Route::delete('/todo/{sid}', "TodoController@deleteTodo");
     
-
 
 ## Building the Frontend
 
