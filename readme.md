@@ -209,7 +209,7 @@ Lastly, let’s implement the delete method. Add the following method to the `To
                 ->json(["message" => "Todo sucessfully deleted!"]);
         }
 
-Deleting from a document model is quite straightforward, after accessing the document instance with the document `sid` we call the `delete()` method which deletes the document from the Sync service i.e:
+Deleting from a document model is quite straightforward. After accessing the document instance with the document `sid` we call the `delete()` method which deletes the document from the Sync service i.e:
 
     $client->sync->v1->services($sync_sid)
                 ->documents($sid)
