@@ -243,18 +243,19 @@ Usually, when building a Laravel application we would place our application rout
 
 ## Building the Frontend
 
-We have successfully built our API application using Laravel which makes use of Twilio Sync for state management. Now let’s build our frontend application to interface with the API. We will be making use of [Angular](https://angular.io/) as our frontend framework in this tutorial. 
-To get started, we will scaffold our Angular project using the [Angular cli](https://angular.io/cli). If you don’t have the Angular cli already installed, simply run the following to get it installed using `[npm](https://www.npmjs.com/)`:
+We have successfully built our API application using Laravel with Twilio Sync for state management. Now let’s build our frontend application to interface with the API. We will be making use of [Angular](https://angular.io/) as our frontend framework in this tutorial.
+
+To get started, we will scaffold our Angular project using the [Angular CLI](https://angular.io/cli). If you don’t have the Angular CLI already installed, simply run the following to get it installed via `[npm](https://www.npmjs.com/)`:
 
     $ npm install -g @angular/cli
 
-This will install the angular cli globally. You can check out the [official documentation](https://angular.io/cli) to learn more about angular-cli. Now Fire up a terminal and run the following to generate a new angular application:
+This command will install the Angular CLI globally. You can check out the [official documentation](https://angular.io/cli) to learn more about angular-cli. Open up a new terminal and run the following to generate a new Angular application:
 
     $ ng new todo-app
 
-This will generate a base angular project for us which we will be making necessary adjustment to shortly.
+This will generate a base Angular project for us which we will be making necessary adjustments to shortly.
 
-***Note:*** *The above command should be r**u**n outside the Laravel project directory as it’s a standalone angular application.*
+***Note:*** *The above command should be run outside the Laravel project directory as it’s a standalone Angular application.*
 
 ### Adding External Resources
 
