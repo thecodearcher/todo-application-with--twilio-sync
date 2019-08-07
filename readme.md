@@ -1,8 +1,8 @@
 ## Getting started with Twilio-sync using Laravel
 
-In your time as a developer, you might find (or have found) yourself needing an easier and faster way to synchronize a user’s data across multiple devices. One way to do this would be to have a single source of state for your data, ideally in the cloud. Twilio provides a great service which can be used to manage and synchronize data in real-time across multiple devices and platforms.
+In your time as a developer, you might find (or have found) yourself needing an easier and faster way to synchronize a user’s data across multiple devices. One way to do this would be to have a single source of state for your data, ideally in the cloud. Twilio provides a great service which can be used to manage and synchronize data in real-time across multiple devices and platforms called [Twilio Sync](https://www.twilio.com/sync).
 
-In this tutorial we will take a look at how to make use of [Twilio Sync](https://www.twilio.com/sync) as a data store by building a To-do application using Laravel and Angular.
+In this tutorial we will take a look at how to make use of Twilio Sync as a data store by building a To-Do application using Laravel and Angular.
 
 ## Prerequisite
 
