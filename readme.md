@@ -258,7 +258,7 @@ This will generate a base angular project for us which we will be making necessa
 
 ### Adding External Resources
 
-For the sake of this tutorial, we won’t focus much on styling so we will be making use of [Bootstrap](https://getbootstrap.com/) and [Font-awesome](https://fontawesome.com/) for styling and icons respectively. Open the just created angular application in your favorite IDE and make the following changes in `index.html` to add the CDN links for both Bootstrap and Font-awesome:
+For the sake of this tutorial, we won’t focus much on styling. To expedite this need, we will be making use of [Bootstrap](https://getbootstrap.com/) and [Font-awesome](https://fontawesome.com/) for styling and icons respectively. Open the newly created Angular application in your favorite IDE and make the following changes in `index.html` to add the CDN links for both Bootstrap and Font-awesome:
 
     <!doctype html>
     <html lang="en">
