@@ -149,7 +149,7 @@ We are making use of the `read()` method on the Sync service instance which retu
 
 ### Updating a Todo Item
 
-Next, let’s make it possible to update an item on our todo list. To update an existing document on our Sync service, we will make use of the document `sid` - which is a unique identifier for each document on a Sync service - to access the document instance and call the `update()` method passing in the data to be updated on the document. Add the following method to the `TodoController.php`:
+Let’s make it possible to update an item on our to-do list. To update an existing document on our Sync service, we will make use of the document `sid` - which is a unique identifier for each document on a Sync service - to access the document instance and call the `update()` method passing in the data to be updated on the document. Add the following method to the `TodoController.php`:
 
       public function updateTodo(Request $request, $sid)
         {
@@ -190,7 +190,7 @@ Taking a closer look at the new code below:
                     ),
                 ));
 
-The `documents()` method takes a parameter of the document `$sid` and returns the document instance if found, after which we call the `update()` method on the document instance. The `update()`  method takes in an associative array with `key`  of `data`  which we assign the `JSON` data to be updated to. Once the update is done, we return the now updated document data as a `JSON` response.
+The `documents()` method takes a parameter of the document `$sid` and returns the document instance if found, after which we call the `update()` method on the document instance. The `update()` method takes in an associative array with `key` of `data` which we assign the `JSON` data to be updated to. Once the update is complete, we return the newly updated document data as a `JSON` response.
 
 ### Deleting a Todo Item
 
