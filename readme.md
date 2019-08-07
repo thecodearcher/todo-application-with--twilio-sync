@@ -109,7 +109,7 @@ We have three properties in our `JSON` array: `created_at`, `body`  - body of to
 
 ### Retrieving Stored Todo Items
 
-After successful creation of a todo item, the next thing will be to retrieve our stored items. We can easily accomplish this by using the `read()` method on the Twilio Sync service instance. In the `TodoController.php`  add the following method:
+After successful creation of a Todo item, the next step will be to retrieve our stored items. We can easily accomplish this by using the `read()` method on the Twilio Sync service instance. In the `TodoController.php` add the following method:
 
      public function getTodo()
         {
@@ -140,12 +140,12 @@ Let’s take a closer look at what’s new above:
                 array_push($data, $todo);
             }
 
-We are making use of the `read()` method on the Sync service instance which returns all documents stored in this service instance. We loop through the returned documents using a [foreach](https://www.php.net/manual/en/control-structures.foreach.php) and return only the `data` and `sid` of the document while pushing it into a new array which we later return as a `JSON` data.
+We are making use of the `read()` method on the Sync service instance which returns all documents stored in this service instance. We loop through the returned documents using a [foreach loop](https://www.php.net/manual/en/control-structures.foreach.php) and return only the `data` and `sid` of the document while pushing it into a new array which we later return as `JSON` data.
 
 ***Note:***
 
 - *`read()` by default,  returns the first 50 documents in the service instance but you can adjust this to your needs by passing in a `$limit` and `$pageSize` parameter.*
-- *We are storing the document `sid` as we will be making use as a unique way to update or delete an item later on*.
+- *We are storing the document `sid` as we will be making use of it as a unique way to update or delete an item later on*.
 
 ### Updating a Todo Item
 
