@@ -50,14 +50,13 @@ Next step is to update `.env` file with our Twilio credentials. So open up `.env
     TWILIO_AUTH_TOKEN="INSERT YOUR TWILIO TOKEN HERE"
     TWILIO_SYNC_SID="INSERT YOUR TWILIO SYNC SERVICE SID"
 
-## Building Todo API
+## Building To-do API
 
-We have successfully setup our Laravel project with Twilio SDK installed, now let’s move on to building the API for our Todo application.
-First, let’s create a new controller called `TodoController`, this will be our main controller for the API. Fire up a terminal in the working directory and run the following:
+We have successfully setup our Laravel project with the Twilio SDK installed. Now let’s move on to building the API for our To-do application. Create a new controller called `TodoController`. This will be our main controller for the API. Fire up a terminal in the working directory and run the following:
 
     $ php artisan make:controller TodoController
 
-this will generate a file in your `app/Http/Controllers/` directory called `TodoController.php`
+This will generate a file in your `app/Http/Controllers/` directory called `TodoController.php`
 
 ### Creating Todo
 
