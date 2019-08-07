@@ -442,7 +442,7 @@ Next let’s create the view with a form input for creating a todo and also diff
 
 ## Testing Our Application
 
-We have successfully completed our Todo application, now let’s test our implementations. To test, let’s start up our Laravel server. Fire up a terminal in the Laravel project directory and run:
+We have successfully completed our To-do application, now let’s test our implementations. To test, let’s start up our Laravel server. Fire up a terminal in the Laravel project directory and run:
 
     $ php artisan serve
 
@@ -450,20 +450,21 @@ Next, let’s run our Angular application. Change your working directory to the 
 
     $ ng serve --open
 
-***Note:** The `--open` flag tells angular-cli to launch the angular application in your default browser after compiling.*
+***Note:** The `--open` flag tells Angular CLI to launch the angular application in your default browser after compiling.*
 
 If the above command runs successfully, proceed to open up a web browser and navigate to `http://localhost:4200/`. You should be greeted with a page similar to this:
 
 ![View of todo application](https://paper-attachments.dropbox.com/s_5B5FA98AD5606E04809864722A8F0F4EB8F518B0E2B10755A59A558A47AFF83E_1563922381854_Screenshot+from+2019-07-23+23-52-42.png)
 
 
- Now go ahead and add some items to your todo and so try updating the state of an item. Here’s a screenshot of how your application should look after adding a todo item:
+Now go ahead and add some items to your to-do and try updating the state of an item. Here’s a screenshot of how your application should look after adding a Todo item:
 
 ![Todo application with uncompleted and completed todo items](https://paper-attachments.dropbox.com/s_5B5FA98AD5606E04809864722A8F0F4EB8F518B0E2B10755A59A558A47AFF83E_1563922745453_Screenshot+from+2019-07-23+23-58-00.png)
 
 ## Conclusion
 
-Great! we have successfully built our Todo application while also learning how to make use of Twilio Sync Service for state management in a Laravel application, how to perform basic CRUD operations on a Twilio Sync service and how to build a RESTful API using Laravel and successfully integrate it with an Angular Client.  
+Great! We have successfully built our To-do application while learning how to make use of Twilio Sync Service for state management in a Laravel application. Additionally, this tutorial taught us how to perform basic CRUD operations on a Twilio Sync service, how to build a RESTful API using Laravel and successfully integrate it with an Angular Client.
+
 If you would like to take a look at the complete source code for this tutorial, you can find both the [Laravel Application](https://github.com/thecodearcher/todo-application-with--twilio-sync) and [Angular Application](https://github.com/thecodearcher/todo-application-with--twilio-sync-angular) respectively on Github. 
 
 You can also take a look at other cool things you can accomplish with [Twilio Sync](https://www.twilio.com/sync) including real-time communication between browsers, mobile devices, and the cloud. 
