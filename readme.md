@@ -87,19 +87,19 @@ Next, open up `TodoController.php` and add the method below. This method creates
                 ->json($todo);
         }
 
-Now, let’s break down what is happening in the code above. After validating the data coming into our function via the `$request` property, we get our stored Twilio credentials from the environment variables using the built-in PHP `[getenv()](http://php.net/manual/en/function.getenv.php)` function and instantiate a new Twilio client using the credentials. We access the `sync`  service from the instance of the Twilio client i.e:
+Let’s break down what's happening in the code above. After validating the data coming into our function via the `$request` property, we retrieve our stored Twilio credentials from the environment variables using the built-in PHP `[getenv()](http://php.net/manual/en/function.getenv.php)` function and instantiate a new Twilio client using the credentials. We access the `sync` service from the instance of the Twilio client i.e:
 
     $client->sync->v1->services
 
-passing in our Twilio Sync service `sid` stored in the `.env` file earlier in this tutorial, then we create a new document on the service instance using `documents→create()`. The `create()` method takes a number of properties in an [associative array](https://www.php.net/manual/en/language.types.array.php) among which is the `data` property to which we assign the JSON data to be stored in this document i.e:
+Passing in our Twilio Sync service `sid` stored in the `.env` file earlier in this tutorial, then we create a new document on the service instance using `documents→create()`. The `create()` method takes a number of properties in an [associative array](https://www.php.net/manual/en/language.types.array.php) among which is the `data` property to which we assign the JSON data to be stored in this document i.e:
 
-    "data" => array(
-                "created_at" => now(),
-                "body" => $validatedData['body'],
-                "isDone" => false,
-              ),
+  "data" => array(
+    "created_at" => now(),
+    "body" => $validatedData['body'],
+    "isDone" => false,
+  ),
 
-We have three properties in our `JSON` array: `created_at`, `body`  - body of todo item, and `isDone` - a `boolean` flag to indicate if todo is completed or not. After successful creation of our Todo item we return a `JSON`  response of the newly created Todo document:
+We have three properties in our `JSON` array: `created_at`, `body` - body of Todo item, and `isDone` - a `boolean` flag to indicate if the to-do is completed or not. After successful creation of our Todo item we return a `JSON`  response of the newly created Todo document:
 
     $todo = $newTodo->data;
     $todo["sid"] = $newTodo->sid;
