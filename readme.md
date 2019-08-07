@@ -19,32 +19,29 @@ In this tutorial, we will look at how to take advantage of Twilio Sync to manage
 
 ### Setting up Laravel Project
 
-Firstly, we will create a new Laravel project either using the Laravel installer or composer.  For this tutorial, we’ll make use of the [Laravel Installer](https://laravel.com/docs/5.8#installation). If you don’t have it installed, you can check how to do so from the [Laravel documentation](https://laravel.com/docs/master).  To generate a fresh Laravel project, run this command in your terminal
-
+Firstly, we will create a new Laravel project using the [Laravel Installer](https://laravel.com/docs/5.8#installation). If you don’t have it installed or prefer to use [Composer](https://laravel.com/docs/5.8/installation), you can check how to do so from the [Laravel documentation](https://laravel.com/docs/master). To generate a fresh Laravel project, run this command in your terminal:
 
     $ laravel new todo-sync 
 
-Now change your working directory to `todo-sync` and install the Twilio SDK via composer :
-
+Now change your working directory to `todo-sync` and install the [Twilio PHP SDK](https://www.twilio.com/docs/libraries/php) via composer :
 
     $ cd todo-sync
     $ composer require twilio/sdk 
 
-If you don’t have composer installed on your PC you can do so by following the instructions [here](https://getcomposer.org/doc/00-intro.md).
+If you don’t have Composer installed on your composer you can do so by following the instructions [here](https://getcomposer.org/doc/00-intro.md).
 
-After installing the [Twilio SDK](https://www.twilio.com/docs/libraries), we need to get our Twilio credentials from the Twilio dashboard. 
-So head over to your [dashboard](https://www.twilio.com/console) and grab your `account_sid` and `auth_token`.
+After installing the [Twilio SDK](https://www.twilio.com/docs/libraries), we need to get our Twilio credentials from the Twilio dashboard. Head over to your [dashboard](https://www.twilio.com/console) and grab your `account_sid` and `auth_token`.
 
 ![](https://paper-attachments.dropbox.com/s_5B5FA98AD5606E04809864722A8F0F4EB8F518B0E2B10755A59A558A47AFF83E_1563979358324_Group+6.png)
 
 
 
-Now navigate to the [Sync](https://www.twilio.com/console/sync/getting-started) section to create a new [Twilio](https://www.twilio.com/console/sync/services) [S](https://www.twilio.com/console/sync/services)[ync service](https://www.twilio.com/console/sync/services). This will serve as the state synchronization service for this tutorial. After successful creation of a service, take note of the generated `sid` as we will be making use of it shortly.
+Now navigate to the [Sync](https://www.twilio.com/console/sync/getting-started) section to create a new [Twilio Sync service](https://www.twilio.com/console/sync/services). This will serve as the state synchronization service for this tutorial. After successful creation of a service, take note of the generated `sid` as we will be making use of it shortly.
 
 ![](https://paper-attachments.dropbox.com/s_5B5FA98AD5606E04809864722A8F0F4EB8F518B0E2B10755A59A558A47AFF83E_1563798556825_Group+5.png)
 
 
-Next step is to update `.env` file with our Twilio credentials. So open up `.env` located at the root of the project directory and add these values
+The next step is to update the `.env` file with our Twilio credentials. To do so, open up `.env` located at the root of the project directory and add these values:
 
     TWILIO_SID="INSERT YOUR TWILIO SID HERE"
     TWILIO_AUTH_TOKEN="INSERT YOUR TWILIO TOKEN HERE"
