@@ -221,7 +221,7 @@ After which we return a `JSON` response with a `message`.
 
 At this point, we have successfully built a basic CRUD API for our to-do application. Now let’s create the routes for our API.
 
-Usually, when building a Laravel application, we would place our application routes in the `routes/web.php`  file. This would allow us to access our application at `http://todo-app.test/todo` and provide features like session state and CSRF protection through the `web` [middleware group](https://laravel.com/docs/5.8/middleware). However, since we are building an API, Laravel has a more well suited locattion for these routes, `routes/api.php`. Placing our routes here will prefix them with `/api` and assign the `api` middleware group. The api  middleware provides features like throttling and bindings, and also allows our routes to be stateless. Open up `routes/api.php` and make the following changes:
+Usually, when building a Laravel application, we would place our application routes in the `routes/web.php`  file. This would allow us to access our application at `http://todo-app.test/todo` and provide features like session state and CSRF protection through the `web` [middleware group](https://laravel.com/docs/5.8/middleware). However, since we are building an API, Laravel has a more well suited location for these routes, `routes/api.php`. Placing our routes here will prefix them with `/api` and assign the `api` middleware group. The api  middleware provides features like throttling and bindings, and also allows our routes to be stateless. Open up `routes/api.php` and make the following changes:
 
     <?php
     use Illuminate\Http\Request;
