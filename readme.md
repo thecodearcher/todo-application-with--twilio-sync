@@ -282,7 +282,7 @@ For the sake of this tutorial, we won’t focus much on styling so we will be ma
 
 ### Connecting to Backend API
 
-Next step is to connect our Angular application to our API. We can achieve this by making HTTP calls to our Laravel application. In Angular, data access is done in a [service](https://angular.io/guide/architecture-services) class. We can easily generate a service using the angular-cli; run the following to generate a new service in a `/services` directory:
+We will now connect our Angular application to our API created in Laravel. We can achieve this by making HTTP requests to our Laravel application. In Angular, data access is processed in a [service](https://angular.io/guide/architecture-services) class. We can easily generate a service using the Angular CLI. Run the following command to generate a new service in a `/services` directory:
 
     $ ng generate service /services/TodoService
 
@@ -314,8 +314,7 @@ This will create a new service in `src/app/services/` named `todo-service.servic
       }
     }
     
-
-Here, we create methods for all available actions on our API which is a basic CRUD operation.  
+Here we created methods for all available actions on our API which is a basic CRUD operation.  
 
 ***Note:*** 
 
