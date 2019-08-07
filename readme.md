@@ -324,7 +324,7 @@ Here, we create methods for all available actions on our API which is a basic CR
 
 ### Creating User Interface
 
-Now we need to create a way for users to create a todo item,  view their todo items, update the state of a todo item and also delete an entry. To accomplish this, we start by making the following changes to the `src/app/app.component.ts`:
+Now we need to create a way for users to create, view, update the state of, and also delete a Todo item. To accomplish this, we start by making the following changes to the `src/app/app.component.ts`:
 
     import { TodoService } from './services/todo-service.service';
     import { Component } from '@angular/core';
@@ -381,8 +381,7 @@ Now we need to create a way for users to create a todo item,  view their todo it
       }
     }
     
-
-Next let’s create the view with a form input for creating a todo and also different sections for listing uncompleted todos and completed todos. Now open up `src/app/app.component.html` and make the following changes:
+Next let’s create the view with a form input for creating a Todo and also different sections for listing uncompleted and completed Todos. Now open up `src/app/app.component.html` and make the following changes:
 
     <!--The content below is only a placeholder and can be replaced.-->
     <div class="container my-5">
