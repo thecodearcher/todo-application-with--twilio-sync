@@ -59,29 +59,31 @@ This will generate a file in your `app/Http/Controllers/` directory called `Todo
 
 Next, open up `TodoController.php` and add the method below. This method creates a Todo item and stores it in our Twillo Sync service:
 
-     public function createTodo(Request $request)
-        {
-            $validatedData = $request->validate([
-                'body' => 'required',
-            ]);
-            $account_sid = getenv("TWILIO_SID");
-            $auth_token = getenv("TWILIO_AUTH_TOKEN");
-            $sync_sid = getenv("TWILIO_SYNC_SID");
-            $client = new Client($account_sid, $auth_token);
-            $newTodo = $client->sync->v1->services($sync_sid)
-                ->documents
-                ->create(array(
-                    "data" => array(
-                        "created_at" => now(),
-                        "body" => $validatedData['body'],
-                        "isDone" => false,
-                    ),
-                ));
-            $todo = $newTodo->data;
-            $todo["sid"] = $newTodo->sid;
-            return response()
-                ->json($todo);
-        }
+```php
+public function createTodo(Request $request)
+  {
+      $validatedData = $request->validate([
+          'body' => 'required',
+      ]);
+      $account_sid = getenv("TWILIO_SID");
+      $auth_token = getenv("TWILIO_AUTH_TOKEN");
+      $sync_sid = getenv("TWILIO_SYNC_SID");
+      $client = new Client($account_sid, $auth_token);
+      $newTodo = $client->sync->v1->services($sync_sid)
+          ->documents
+          ->create(array(
+              "data" => array(
+                  "created_at" => now(),
+                  "body" => $validatedData['body'],
+                  "isDone" => false,
+              ),
+          ));
+      $todo = $newTodo->data;
+      $todo["sid"] = $newTodo->sid;
+      return response()
+          ->json($todo);
+  }
+```
 
 Let’s break down what's happening in the code above. After validating the data coming into our function via the `$request` property, we retrieve our stored Twilio credentials from the environment variables using the built-in PHP `[getenv()](http://php.net/manual/en/function.getenv.php)` function and instantiate a new Twilio client using the credentials. We access the `sync` service from the instance of the Twilio client i.e:
 
@@ -89,7 +91,7 @@ Let’s break down what's happening in the code above. After validating the data
 
 Passing in our Twilio Sync service `sid` stored in the `.env` file earlier in this tutorial, then we create a new document on the service instance using `documents→create()`. The `create()` method takes a number of properties in an [associative array](https://www.php.net/manual/en/language.types.array.php) among which is the `data` property to which we assign the JSON data to be stored in this document i.e:
 
-```
+```php
 "data" => array(
   "created_at" => now(),
   "body" => $validatedData['body'],
@@ -99,9 +101,11 @@ Passing in our Twilio Sync service `sid` stored in the `.env` file earlier in th
 
 We have three properties in our `JSON` array: `created_at`, `body` - body of Todo item, and `isDone` - a `boolean` flag to indicate if the to-do is completed or not. After successful creation of our Todo item we return a `JSON`  response of the newly created Todo document:
 
-    $todo = $newTodo->data;
-    $todo["sid"] = $newTodo->sid;
-    return response()->json($todo);
+```php
+$todo = $newTodo->data;
+$todo["sid"] = $newTodo->sid;
+return response()->json($todo);
+```
 
 ***Note:** We are returning a `JSON` data instead of a `view` because we are building our frontend separate from our Laravel project.*
 
@@ -109,34 +113,38 @@ We have three properties in our `JSON` array: `created_at`, `body` - body of Tod
 
 After successful creation of a Todo item, the next step will be to retrieve our stored items. We can easily accomplish this by using the `read()` method on the Twilio Sync service instance. In the `TodoController.php` add the following method:
 
-     public function getTodo()
-        {
-            $account_sid = getenv("TWILIO_SID");
-            $auth_token = getenv("TWILIO_AUTH_TOKEN");
-            $sync_sid = getenv("TWILIO_SYNC_SID");
-            $client = new Client($account_sid, $auth_token);
-            $documents = $client->sync->v1->services($sync_sid)
-                ->documents->read();
-            $data = [];
-            foreach ($documents as $record) {
-                $todo = $record->data;
-                $todo['sid'] = $record->sid;
-                array_push($data, $todo);
-            }
-            return response()
-                ->json($data);
-        }
+```php
+public function getTodo()
+  {
+      $account_sid = getenv("TWILIO_SID");
+      $auth_token = getenv("TWILIO_AUTH_TOKEN");
+      $sync_sid = getenv("TWILIO_SYNC_SID");
+      $client = new Client($account_sid, $auth_token);
+      $documents = $client->sync->v1->services($sync_sid)
+          ->documents->read();
+      $data = [];
+      foreach ($documents as $record) {
+          $todo = $record->data;
+          $todo['sid'] = $record->sid;
+          array_push($data, $todo);
+      }
+      return response()
+          ->json($data);
+  }
+```
 
 Let’s take a closer look at what’s new above:
 
-    $documents = $client->sync->v1->services($sync_sid)
-                ->documents->read();
-            $data = [];
-            foreach ($documents as $record) {
-                $todo = $record->data;
-                $todo['sid'] = $record->sid;
-                array_push($data, $todo);
-            }
+```php
+$documents = $client->sync->v1->services($sync_sid)->documents->read();
+$data = [];
+
+foreach ($documents as $record) {
+    $todo = $record->data;
+    $todo['sid'] = $record->sid;
+    array_push($data, $todo);
+}
+```
 
 We are making use of the `read()` method on the Sync service instance which returns all documents stored in this service instance. We loop through the returned documents using a [foreach loop](https://www.php.net/manual/en/control-structures.foreach.php) and return only the `data` and `sid` of the document while pushing it into a new array which we later return as `JSON` data.
 
@@ -149,44 +157,48 @@ We are making use of the `read()` method on the Sync service instance which retu
 
 Let’s make it possible to update an item on our to-do list. To update an existing document on our Sync service, we will make use of the document `sid` - which is a unique identifier for each document on a Sync service - to access the document instance and call the `update()` method passing in the data to be updated on the document. Add the following method to the `TodoController.php`:
 
-      public function updateTodo(Request $request, $sid)
-        {
-            $validatedData = $request->validate([
-                'body' => 'required',
-                'isDone' => 'required',
-                'created_at' => 'required',
-                'sid' => 'required',
-            ]);
-            $account_sid = getenv("TWILIO_SID");
-            $auth_token = getenv("TWILIO_AUTH_TOKEN");
-            $sync_sid = getenv("TWILIO_SYNC_SID");
-            $client = new Client($account_sid, $auth_token);
-            $newTodo = $client->sync->v1->services($sync_sid)
-                ->documents($sid)
-                ->update(array(
-                    "data" => array(
-                        "sid" => $validatedData["sid"],
-                        "body" => $validatedData['body'],
-                        "isDone" => $validatedData["isDone"],
-                        "created_at" => $validatedData["created_at"],
-                    ),
-                ));
-            return response()
-                ->json($newTodo->data);
-        }
+```php
+public function updateTodo(Request $request, $sid)
+{
+    $validatedData = $request->validate([
+        'body' => 'required',
+        'isDone' => 'required',
+        'created_at' => 'required',
+        'sid' => 'required',
+    ]);
+    $account_sid = getenv("TWILIO_SID");
+    $auth_token = getenv("TWILIO_AUTH_TOKEN");
+    $sync_sid = getenv("TWILIO_SYNC_SID");
+    $client = new Client($account_sid, $auth_token);
+    $newTodo = $client->sync->v1->services($sync_sid)
+        ->documents($sid)
+        ->update(array(
+            "data" => array(
+                "sid" => $validatedData["sid"],
+                "body" => $validatedData['body'],
+                "isDone" => $validatedData["isDone"],
+                "created_at" => $validatedData["created_at"],
+            ),
+        ));
+    return response()
+        ->json($newTodo->data);
+}
+```
 
 Taking a closer look at the new code below:
 
-    $newTodo = $client->sync->v1->services($sync_sid)
-                ->documents($sid)
-                ->update(array(
-                    "data" => array(
-                        "sid" => $validatedData["sid"],
-                        "body" => $validatedData['body'],
-                        "isDone" => $validatedData["isDone"],
-                        "created_at" => $validatedData["created_at"],
-                    ),
-                ));
+```php
+$newTodo = $client->sync->v1->services($sync_sid)
+            ->documents($sid)
+            ->update(array(
+                "data" => array(
+                    "sid" => $validatedData["sid"],
+                    "body" => $validatedData['body'],
+                    "isDone" => $validatedData["isDone"],
+                    "created_at" => $validatedData["created_at"],
+                ),
+            ));
+```
 
 The `documents()` method takes a parameter of the document `$sid` and returns the document instance if found, after which we call the `update()` method on the document instance. The `update()` method takes in an associative array with `key` of `data` which we assign the `JSON` data to be updated to. Once the update is complete, we return the newly updated document data as a `JSON` response.
 
@@ -194,24 +206,28 @@ The `documents()` method takes a parameter of the document `$sid` and returns th
 
 Lastly, let’s implement the delete method. Add the following method to the `TodoController.php`
 
-    public function deleteTodo($sid)
-        {
-            $account_sid = getenv("TWILIO_SID");
-            $auth_token = getenv("TWILIO_AUTH_TOKEN");
-            $sync_sid = getenv("TWILIO_SYNC_SID");
-            $client = new Client($account_sid, $auth_token);
-            $client->sync->v1->services($sync_sid)
-                ->documents($sid)
-                ->delete();
-            return response()
-                ->json(["message" => "Todo sucessfully deleted!"]);
-        }
+```php
+public function deleteTodo($sid)
+    {
+        $account_sid = getenv("TWILIO_SID");
+        $auth_token = getenv("TWILIO_AUTH_TOKEN");
+        $sync_sid = getenv("TWILIO_SYNC_SID");
+        $client = new Client($account_sid, $auth_token);
+        $client->sync->v1->services($sync_sid)
+            ->documents($sid)
+            ->delete();
+        return response()
+            ->json(["message" => "Todo sucessfully deleted!"]);
+    }
+```
 
 Deleting from a document model is quite straightforward. After accessing the document instance with the document `sid` we call the `delete()` method which deletes the document from the Sync service i.e:
 
-    $client->sync->v1->services($sync_sid)
-                ->documents($sid)
-                ->delete();
+```php
+$client->sync->v1->services($sync_sid)
+            ->documents($sid)
+            ->delete();
+```
 
 After which we return a `JSON` response with a `message`.
 
@@ -221,23 +237,24 @@ At this point, we have successfully built a basic CRUD API for our to-do applica
 
 Usually, when building a Laravel application, we would place our application routes in the `routes/web.php`  file. This would allow us to access our application at `http://todo-app.test/todo` and provide features like session state and CSRF protection through the `web` [middleware group](https://laravel.com/docs/5.8/middleware). However, since we are building an API, Laravel has a more well suited location for these routes, `routes/api.php`. Placing our routes here will prefix them with `/api` and assign the `api` middleware group. The api  middleware provides features like throttling and bindings, and also allows our routes to be stateless. Open up `routes/api.php` and make the following changes:
 
-    <?php
-    use Illuminate\Http\Request;
-    /*
-    |--------------------------------------------------------------------------
-    | API Routes
-    |--------------------------------------------------------------------------
-    |
-    | Here is where you can register API routes for your application. These
-    | routes are loaded by the RouteServiceProvider within a group which
-    | is assigned the "api" middleware group. Enjoy building your API!
-    |
-    */
-    Route::get('/todo', "TodoController@getTodo");
-    Route::post('/todo', "TodoController@createTodo");
-    Route::put('/todo/{sid}', "TodoController@updateTodo");
-    Route::delete('/todo/{sid}', "TodoController@deleteTodo");
-    
+```php
+<?php
+use Illuminate\Http\Request;
+/*
+|--------------------------------------------------------------------------
+| API Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register API routes for your application. These
+| routes are loaded by the RouteServiceProvider within a group which
+| is assigned the "api" middleware group. Enjoy building your API!
+|
+*/
+Route::get('/todo', "TodoController@getTodo");
+Route::post('/todo', "TodoController@createTodo");
+Route::put('/todo/{sid}', "TodoController@updateTodo");
+Route::delete('/todo/{sid}', "TodoController@deleteTodo");
+``` 
 
 ## Building the Frontend
 
@@ -259,25 +276,26 @@ This will generate a base Angular project for us which we will be making necessa
 
 For the sake of this tutorial, we won’t focus much on styling. To expedite this need, we will be making use of [Bootstrap](https://getbootstrap.com/) and [Font-awesome](https://fontawesome.com/) for styling and icons respectively. Open the newly created Angular application in your favorite IDE and make the following changes in `index.html` to add the CDN links for both Bootstrap and Font-awesome:
 
-    <!doctype html>
-    <html lang="en">
-    <head>
-      <meta charset="utf-8">
-      <title>TodoApp</title>
-      <base href="/">
-      <meta name="viewport" content="width=device-width, initial-scale=1">
-      <link rel="icon" type="image/x-icon" href="favicon.ico">
-      <!-- Bootstrap CDN -->
-      <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-      <!-- Font-awesome CDN -->
-      <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css" rel="stylesheet">
-    </head>
-    <body>
-      <app-root></app-root>
-    </body>
-    </html>
-    
+```html
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>TodoApp</title>
+  <base href="/">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <!-- Bootstrap CDN -->
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <!-- Font-awesome CDN -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+  <app-root></app-root>
+</body>
+</html>
+```
 
 ### Connecting to Backend API
 
@@ -287,32 +305,34 @@ We will now connect our Angular application to our API created in Laravel. We ca
 
 This will create a new service in `src/app/services/` named `todo-service.service.ts` and also inject it into our application as a [singleton service](https://angular.io/guide/singleton-services). Proceed to make the following changes to the `todo-service.service.ts` file:
 
-    import { Injectable } from '@angular/core';
-    import { HttpClient } from '@angular/common/http';
-    @Injectable({
-      providedIn: 'root'
-    })
-    export class TodoService {
-      private baseUrl = 'http://127.0.0.1:8000/api/todo';
-      constructor(private http: HttpClient) { }
-    
-      createTodo(body) {
-        return this.http.post(this.baseUrl, body);
-      }
-    
-      updateTodo(sid: string, todo) {
-        return this.http.put(`${this.baseUrl}/${sid}`, { ...todo });
-      }
-    
-      deleteTodo(sid: string) {
-        return this.http.delete(`${this.baseUrl}/${sid}`);
-      }
-    
-      getTodos() {
-        return this.http.get(this.baseUrl);
-      }
-    }
-    
+```javascript
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+@Injectable({
+  providedIn: 'root'
+})
+export class TodoService {
+  private baseUrl = 'http://127.0.0.1:8000/api/todo';
+  constructor(private http: HttpClient) { }
+
+  createTodo(body) {
+    return this.http.post(this.baseUrl, body);
+  }
+
+  updateTodo(sid: string, todo) {
+    return this.http.put(`${this.baseUrl}/${sid}`, { ...todo });
+  }
+
+  deleteTodo(sid: string) {
+    return this.http.delete(`${this.baseUrl}/${sid}`);
+  }
+
+  getTodos() {
+    return this.http.get(this.baseUrl);
+  }
+}
+```
+
 Here we created methods for all available actions on our API which is a basic CRUD operation.  
 
 ***Note:*** 
@@ -324,118 +344,120 @@ Here we created methods for all available actions on our API which is a basic CR
 
 Now we need to create a way for users to create, view, update the state of, and also delete a Todo item. To accomplish this, we start by making the following changes to the `src/app/app.component.ts`:
 
-    import { TodoService } from './services/todo-service.service';
-    import { Component } from '@angular/core';
-    @Component({
-      selector: 'app-root',
-      templateUrl: './app.component.html',
-      styleUrls: ['./app.component.scss']
-    })
-    export class AppComponent {
-      title = 'todo-app';
-      todos: { body: string, created_at: Date, sid: string, isDone: boolean }[] = [];
-      itemValue: string;
-      constructor(private todoService: TodoService) {
-        this.getTodos(); // Get todos on component intialization
-      }
-      getTodos() {
-        this.todoService.getTodos()
-          .subscribe((res: any) => {
-            this.todos = res;
-            this.todos.reverse();
-            console.log(res);
-          }, error => {
-            console.error(error);
-          });
-      }
-      createTodo() {
-        this.todoService.createTodo({ body: this.itemValue })
-          .subscribe((res: any) => {
-            this.todos.unshift(res);
-            this.itemValue = '';
-            console.log(res);
-          }, error => {
-            console.error(error);
-          });
-      }
-      deleteTodo(todoSid) {
-        this.todoService.deleteTodo(todoSid)
-          .subscribe((res: any) => {
-            this.todos = this.todos.filter(todo => todo.sid !== todoSid);
-            this.itemValue = '';
-            console.log(res);
-          }, error => {
-            console.error(error);
-          });
-      }
-      updateTodo(todo) {
-        this.todoService.updateTodo(todo.sid, todo)
-          .subscribe((res: any) => {
-            this.itemValue = '';
-            console.log(res);
-          }, error => {
-            console.error(error);
-          });
-      }
-    }
-    
+```javascript
+import { TodoService } from './services/todo-service.service';
+import { Component } from '@angular/core';
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.scss']
+})
+export class AppComponent {
+  title = 'todo-app';
+  todos: { body: string, created_at: Date, sid: string, isDone: boolean }[] = [];
+  itemValue: string;
+  constructor(private todoService: TodoService) {
+    this.getTodos(); // Get todos on component intialization
+  }
+  getTodos() {
+    this.todoService.getTodos()
+      .subscribe((res: any) => {
+        this.todos = res;
+        this.todos.reverse();
+        console.log(res);
+      }, error => {
+        console.error(error);
+      });
+  }
+  createTodo() {
+    this.todoService.createTodo({ body: this.itemValue })
+      .subscribe((res: any) => {
+        this.todos.unshift(res);
+        this.itemValue = '';
+        console.log(res);
+      }, error => {
+        console.error(error);
+      });
+  }
+  deleteTodo(todoSid) {
+    this.todoService.deleteTodo(todoSid)
+      .subscribe((res: any) => {
+        this.todos = this.todos.filter(todo => todo.sid !== todoSid);
+        this.itemValue = '';
+        console.log(res);
+      }, error => {
+        console.error(error);
+      });
+  }
+  updateTodo(todo) {
+    this.todoService.updateTodo(todo.sid, todo)
+      .subscribe((res: any) => {
+        this.itemValue = '';
+        console.log(res);
+      }, error => {
+        console.error(error);
+      });
+  }
+}
+```
+
 Next let’s create the view with a form input for creating a Todo and also different sections for listing uncompleted and completed Todos. Now open up `src/app/app.component.html` and make the following changes:
 
-    <!--The content below is only a placeholder and can be replaced.-->
-    <div class="container my-5">
-      <h2>
-        Welcome to {{ title }}!
-       </h2>
-      <form>
-        <div class="form-group">
-          <label for="formGroupExampleInput">Enter Todo Item</label>
-          <input [(ngModel)]="itemValue" name="item" type="text" class="form-control" placeholder="Buy beans..">
-        </div>service
-        <button [disabled]="!itemValue?.length" (click)="createTodo()" type="button" class="btn btn-primary btn-block">Add
-          Item</button>
-      </form>
-      <div class="todo-list my-5">
-        <h3>Your To-do list: </h3>
-      <ng-template *ngFor="let todo of todos" [ngIf]="!todo.isDone">
-        <div class="input-group mb-3">
-          <div class="input-group-prepend">
-            <div class="input-group-text">
-              <input type="checkbox" [(ngModel)]="todo.isDone" (change)="updateTodo(todo)">
-            </div>
-          </div>
-          <input [(ngModel)]="todo.body" [value]="todo.body" type="text" class="form-control">
-          <div class="input-group-append" id="button-addon4">
-            <button (click)="updateTodo(todo)" class="btn btn-success" type="button">
-              <i class="far fa-edit"></i>
-            </button>
-            <button (click)="deleteTodo(todo.sid)" class="btn btn-danger" type="button">
-              <i class="fa fa-trash"></i>
-            </button>
-          </div>
+```html
+<!--The content below is only a placeholder and can be replaced.-->
+<div class="container my-5">
+  <h2>
+    Welcome to {{ title }}!
+    </h2>
+  <form>
+    <div class="form-group">
+      <label for="formGroupExampleInput">Enter Todo Item</label>
+      <input [(ngModel)]="itemValue" name="item" type="text" class="form-control" placeholder="Buy beans..">
+    </div>service
+    <button [disabled]="!itemValue?.length" (click)="createTodo()" type="button" class="btn btn-primary btn-block">Add
+      Item</button>
+  </form>
+  <div class="todo-list my-5">
+    <h3>Your To-do list: </h3>
+  <ng-template *ngFor="let todo of todos" [ngIf]="!todo.isDone">
+    <div class="input-group mb-3">
+      <div class="input-group-prepend">
+        <div class="input-group-text">
+          <input type="checkbox" [(ngModel)]="todo.isDone" (change)="updateTodo(todo)">
         </div>
-      </ng-template>
       </div>
-      <div class="todo-list my-5">
-        <h3>Your Completed To-do(s): </h3>
-        <ng-template  *ngFor="let todo of todos" [ngIf]="todo.isDone">
-          <div  class="input-group mb-3">
-            <div class="input-group-prepend">
-              <div class="input-group-text">
-                <input type="checkbox" [(ngModel)]="todo.isDone" (change)="updateTodo(todo)">
-              </div>
-            </div>
-            <input disabled [(ngModel)]="todo.body" [value]="todo.body" type="text" class="form-control">
-            <div class="input-group-append" id="button-addon4">
-              <button (click)="deleteTodo(todo.sid)" class="btn btn-danger" type="button">
-                <i class="fa fa-trash"></i>
-              </button>
-            </div>
-          </div>
-        </ng-template>
+      <input [(ngModel)]="todo.body" [value]="todo.body" type="text" class="form-control">
+      <div class="input-group-append" id="button-addon4">
+        <button (click)="updateTodo(todo)" class="btn btn-success" type="button">
+          <i class="far fa-edit"></i>
+        </button>
+        <button (click)="deleteTodo(todo.sid)" class="btn btn-danger" type="button">
+          <i class="fa fa-trash"></i>
+        </button>
       </div>
     </div>
-    
-
+  </ng-template>
+  </div>
+  <div class="todo-list my-5">
+    <h3>Your Completed To-do(s): </h3>
+    <ng-template  *ngFor="let todo of todos" [ngIf]="todo.isDone">
+      <div  class="input-group mb-3">
+        <div class="input-group-prepend">
+          <div class="input-group-text">
+            <input type="checkbox" [(ngModel)]="todo.isDone" (change)="updateTodo(todo)">
+          </div>
+        </div>
+        <input disabled [(ngModel)]="todo.body" [value]="todo.body" type="text" class="form-control">
+        <div class="input-group-append" id="button-addon4">
+          <button (click)="deleteTodo(todo.sid)" class="btn btn-danger" type="button">
+            <i class="fa fa-trash"></i>
+          </button>
+        </div>
+      </div>
+    </ng-template>
+  </div>
+</div>
+```
 
 ## Testing Our Application
 
