@@ -89,11 +89,13 @@ Let’s break down what's happening in the code above. After validating the data
 
 Passing in our Twilio Sync service `sid` stored in the `.env` file earlier in this tutorial, then we create a new document on the service instance using `documents→create()`. The `create()` method takes a number of properties in an [associative array](https://www.php.net/manual/en/language.types.array.php) among which is the `data` property to which we assign the JSON data to be stored in this document i.e:
 
-  "data" => array(
-    "created_at" => now(),
-    "body" => $validatedData['body'],
-    "isDone" => false,
-  ),
+```
+"data" => array(
+  "created_at" => now(),
+  "body" => $validatedData['body'],
+  "isDone" => false,
+),
+```
 
 We have three properties in our `JSON` array: `created_at`, `body` - body of Todo item, and `isDone` - a `boolean` flag to indicate if the to-do is completed or not. After successful creation of our Todo item we return a `JSON`  response of the newly created Todo document:
 
