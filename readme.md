@@ -85,7 +85,7 @@ public function createTodo(Request $request)
   }
 ```
 
-Let’s break down what's happening in the code above. After validating the data coming into our function via the `$request` property, we retrieve our stored Twilio credentials from the environment variables using the built-in PHP `[getenv()](http://php.net/manual/en/function.getenv.php)` function and instantiate a new Twilio client using the credentials. We access the `sync` service from the instance of the Twilio client i.e:
+Let’s break down what's happening in the code above. After validating the data coming into our function via the `$request` property, we retrieve our stored Twilio credentials from the environment variables using the built-in PHP [getenv()](http://php.net/manual/en/function.getenv.php) function and instantiate a new Twilio client using the credentials. We access the `sync` service from the instance of the Twilio client i.e:
 
     $client->sync->v1->services
 
@@ -260,7 +260,7 @@ Route::delete('/todo/{sid}', "TodoController@deleteTodo");
 
 We have successfully built our API application using Laravel with Twilio Sync for state management. Now let’s build our frontend application to interface with the API. We will be making use of [Angular](https://angular.io/) as our frontend framework in this tutorial.
 
-To get started, we will scaffold our Angular project using the [Angular CLI](https://angular.io/cli). If you don’t have the Angular CLI already installed, simply run the following to get it installed via `[npm](https://www.npmjs.com/)`:
+To get started, we will scaffold our Angular project using the [Angular CLI](https://angular.io/cli). If you don’t have the Angular CLI already installed, simply run the following to get it installed via [npm](https://www.npmjs.com/):
 
     $ npm install -g @angular/cli
 
@@ -337,8 +337,8 @@ Here we created methods for all available actions on our API which is a basic CR
 
 ***Note:*** 
 
-- *`[HttpClient](https://angular.io/guide/http)` is Angular's mechanism for communicating with a remote server over HTTP.*
-- *You will need to add the `[HttpClientModule](https://angular.io/guide/feature-modules)` into your `src/app/app.module.ts` `imports` array to ensure it is available in the application.*
+- *[HttpClient](https://angular.io/guide/http) is Angular's mechanism for communicating with a remote server over HTTP.*
+- *You will need to add the [HttpClientModule](https://angular.io/guide/feature-modules) into your `src/app/app.module.ts` `imports` array to ensure it is available in the application.*
 
 ### Creating User Interface
 
